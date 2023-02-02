@@ -1,9 +1,13 @@
-SUB_DIRS := boot dev/display io lib sys
+SUB_DIRS := arch boot dev/display io lib sys
 
 OBJ_DIR := ../../$(OBJ_DIR)/Kernel
 OUTPUT_DIR := ../../$(OUTPUT_DIR)
 INCLUDE_DIR := ../../$(INCLUDE_DIR)
 KERNEL_BIN := ../../$(KERNEL_BIN)
+
+SYMBOL_GENERATOR := gensymbols.sh
+SYMBOL_FILE := _symbols.gen
+OBJ_SYMBOL_FILE := $(OBJ_DIR)/_symbols.o
 
 LINKER_FILE := linker.ld
 C_SRC := $(wildcard *.c $(foreach fd, $(SUB_DIRS), $(fd)/*.c))
@@ -18,8 +22,17 @@ LDFLAGS += -T $(LINKER_FILE)
 
 build: $(KERNEL_BIN)
 $(KERNEL_BIN): $(ASM_OBJ) $(C_OBJ)
-	@echo "\n========== Linking Kernel Files =========="
-	$(LD) $(LDFLAGS) $^ -o $@
+	@echo "\n========== Generating Symbol file =========="
+	@./$(SYMBOL_GENERATOR) $^
+	$(CC) $(CFLAGS) -x c -c $(SYMBOL_FILE) -o $(OBJ_SYMBOL_FILE)
+	$(LD) $(LDFLAGS) $^ -o $@ $(OBJ_SYMBOL_FILE)
+	
+	@echo "\n========== Re-Generating Symbol file =========="
+	@./$(SYMBOL_GENERATOR) $(KERNEL_BIN)
+	$(CC) $(CFLAGS) -x c -c $(SYMBOL_FILE) -o $(OBJ_SYMBOL_FILE)
+	
+	@echo "\n========== Re-Linking Kernel Files =========="
+	$(LD) $(LDFLAGS) $^ -o $@ $(OBJ_SYMBOL_FILE)
 
 $(OBJ_DIR)/%.o: %.asm
 	@mkdir -p $(@D)

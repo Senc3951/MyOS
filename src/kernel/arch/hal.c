@@ -1,0 +1,29 @@
+#include <kernel/arch/hal.h>
+#include <kernel/arch/gdt.h>
+#include <kernel/arch/pic.h>
+#include <kernel/arch/irq.h>
+#include <kernel/arch/idt.h>
+#include <kernel/sys/panic.h>
+#include <kernel/sys/logger.h>
+
+static void initializeDevices();
+
+void HAL_Initialize()
+{
+    __CLI();
+    
+    GDT_Initialize();
+    LOGI("HAL", "GDT Initialized.\n");
+    IDT_Initialize();
+    LOGI("HAL", "IDT Initialized.\n");
+    initializeDevices();
+    LOGI("HAL", "Hardware Devices Initialized.\n");
+    
+    __STI();
+}
+
+void initializeDevices()
+{
+    PIC_Initialize(IRQ0, IRQ0 + 8, false);
+    LOGI("HAL", "PIC Initialized.\n");
+}

@@ -58,12 +58,12 @@ uint16_t inl(const uint16_t port);
 /**
  * @brief Disable interrupts.
 */
-#define __CLI() { LOGW("Disabling Interrupts.\n"); asm("cli"); }
+#define __CLI() { LOGW(NULL, "Disabling Interrupts.\n"); asm("cli"); }
 
 /**
  * @brief Enable interrupts.
 */
-#define __STI() { LOGW("Enabling Interrupts.\n"); asm("sti"); }
+#define __STI() { LOGW(NULL, "Enabling Interrupts.\n"); asm("sti"); }
 
 /**
  * @brief Halt the processor.

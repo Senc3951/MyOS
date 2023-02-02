@@ -1,7 +1,24 @@
 #pragma once
 
 #include <kernel/io/io.h>
+#include <kernel/arch/isr.h>
 #include <kernel/dev/display/vga.h>
+
+/**
+ * @brief Print a panic message and dump the stack.
+ * @attention This will halt the system infinitely.
+ * 
+ * @param stack Stack before the panic.
+ * @param fmt Formatted string to print.
+*/
+#define ikpanic(stack, ...) ({\
+    clrscnc(BLUE); \
+    kprintf(__VA_ARGS__); \
+    ISR_DumpRegisters(stack); \
+    ISR_DumpStackTrace(stack, ISR_STACK_TRACE_MAX); \
+    \
+    __CLI_HALT(); \
+})
 
 /**
  * @brief Print a panic message.
