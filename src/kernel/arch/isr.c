@@ -47,9 +47,7 @@ static const char *g_EXCEPTIONS[] = {
 void ISR_RegisterInterrupt(const uint8_t interruptNumber, ISRHandler handler)
 {
     if (interruptNumber < IRQ0)
-    {
         LOGW("ISR", "Registering a Handler for Interrupt No. 0x%x [%s]\n", interruptNumber, g_EXCEPTIONS[interruptNumber]);
-    }
     else
         LOGW("ISR", "Registering a Handler for Interrupt No. 0x%x\n", interruptNumber);
     
