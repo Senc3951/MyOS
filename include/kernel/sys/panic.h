@@ -11,7 +11,7 @@
  * @param stack Stack before the panic.
  * @param fmt Formatted string to print.
 */
-#define ikpanic(stack, ...) ({\
+#define IKPANIC(stack, ...) ({\
     clrscnc(BLUE); \
     kprintf(__VA_ARGS__); \
     ISR_DumpRegisters(stack); \

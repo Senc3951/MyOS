@@ -27,7 +27,7 @@ void IRQ_InterruptHandler(InterruptStack_t *stack)
     if (g_IRQInterruptHandlers[irqCode] != NULL)
         g_IRQInterruptHandlers[irqCode](stack);
     else
-        ikpanic(stack, "Unhandled IRQ Detected.\nIRQ number: 0x%x, Interrupt number: 0x%x, Error Code: 0x%x.\n\n", irqCode, stack->interruptNumber, stack->errorCode);
+        IKPANIC(stack, "Unhandled IRQ Detected.\nIRQ number: 0x%x, Interrupt number: 0x%x, Error Code: 0x%x.\n\n", irqCode, stack->interruptNumber, stack->errorCode);
     
     PIC_SendEOI(irqCode);
 }

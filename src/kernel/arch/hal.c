@@ -11,9 +11,7 @@
 static void initializeDevices();
 
 void HAL_Initialize()
-{
-    __CLI();
-    
+{    
     GDT_Initialize();
     LOGI("HAL", "GDT Initialized.\n");
     IDT_Initialize();

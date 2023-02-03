@@ -64,9 +64,9 @@ void ISR_InterruptHandler(InterruptStack_t *stack)
         if (!IS_IRQ(intNumber))
         {
             if (intNumber < IRQ0)
-                ikpanic(stack, "%s Detected\nInterrupt number: 0x%x, Error Code: 0x%x.\n\n", g_EXCEPTIONS[intNumber], intNumber, stack->errorCode);
+                IKPANIC(stack, "%s Detected\nInterrupt number: 0x%x, Error Code: 0x%x.\n\n", g_EXCEPTIONS[intNumber], intNumber, stack->errorCode);
             else
-                ikpanic(stack, "Interrupt number: 0x%x, Error Code: 0x%x.\n\n", g_EXCEPTIONS[intNumber], intNumber, stack->errorCode);
+                IKPANIC(stack, "Interrupt number: 0x%x, Error Code: 0x%x.\n\n", g_EXCEPTIONS[intNumber], intNumber, stack->errorCode);
         }
         
         IRQ_InterruptHandler(stack);

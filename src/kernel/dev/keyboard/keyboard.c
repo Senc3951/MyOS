@@ -60,23 +60,25 @@ void interruptHandler(InterruptStack_t *stack)
     {
         case 0:
         case INVALID_KEY:
-            ikpanic(stack, "Key detection error or internal buffer overrun.");
+            IKPANIC(stack, "Key detection error or internal buffer overrun.");
             break;
         case RELEASED_KEY:
             g_Released = true;
             break;
         case CAPS_KEY:
-            if (g_LastChar != RELEASED_KEY)
+            if (!g_Released)
                 g_Caps = !g_Caps;
             
             break;
         case RIGHT_SHIFT:
         case LEFT_SHIFT:
-            g_Shift = (g_LastChar != RELEASED_KEY);
+            g_Shift = !g_Released;
             break;
         case BACKSPACE:
-            if (g_LastChar != RELEASED_KEY)
+            if (!g_Released)
                 delc();
+            else
+                g_Released = false;
             
             break;
         default:

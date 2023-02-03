@@ -19,6 +19,7 @@ static inline void scroll()
 
     g_Row--;
 }
+
 static inline void updateCursor()
 {
     if (!g_UpdateCursor)
@@ -77,6 +78,14 @@ void setscnc(const VGAColor_t background, const VGAColor_t foreground)
 
 void delc()
 {
+    if (g_Col == 0)
+    {
+        g_Row--;
+        g_Col = WIDTH;
+    }
+    if (g_Row == 0)
+        return;
+    
     g_VideoBuffer[GET_INDEX(g_Row, --g_Col)] = GET_VGA_CHAR(' ');
 }
 
