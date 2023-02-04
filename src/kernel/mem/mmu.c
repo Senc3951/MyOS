@@ -1,4 +1,5 @@
 #include <kernel/mem/mmu.h>
+#include <kernel/mem/pmm.h>
 #include <kernel/sys/panic.h>
 #include <kernel/sys/logger.h>
 #include <kernel/sys/assert.h>
@@ -18,13 +19,13 @@ static void parseFrameBuffer(struct multiboot_tag_framebuffer *tag);
 static inline void printFormattedBytes(const size_t bytes)
 {
     if (bytes > 1073741824)
-        kprintf("%ld GB", bytes / 1073741824);
+        LOGINM("%ld GB", bytes / 1073741824);
     else if (bytes > 1048576)
-        kprintf("%ld MB", bytes / 1048576);
+        LOGINM("%ld MB", bytes / 1048576);
     else if (bytes > 1024)
-        kprintf("%ld KB", bytes / 1024);
+        LOGINM("%ld KB", bytes / 1024);
     else
-        kprintf("%ld B", bytes);
+        LOGINM("%ld B", bytes);
 }
 
 static inline void printFormattedMemoryType(const MemoryEntryType_t type)
@@ -32,22 +33,22 @@ static inline void printFormattedMemoryType(const MemoryEntryType_t type)
     switch (type)
     {
         case MMAP_Free:
-            kprintf("Free");
+            LOGINM("Free");
             break;
         case MMAP_Reserved:
-            kprintf("Reserved");
+            LOGINM("Reserved");
             break;
         case MMAP_ACPI_Reclaimable:
-            kprintf("ACPI Reclaimable");
+            LOGINM("ACPI Reclaimable");
             break;
         case MMAP_NVS:
-            kprintf("NVS");
+            LOGINM("NVS");
             break;
         case MMAP_BADRAM:
-            kprintf("BADRAM");
+            LOGINM("BADRAM");
             break;
         default:
-            kprintf("Unknown");
+            LOGINM("Unknown");
             break;
     }
 }
@@ -60,25 +61,9 @@ void MMU_Initialize(const uintptr_t magic, const MB2Info_t *mbTags)
     memset(g_MMAP.bootloaderName, 0, MMU_BOOTLOADER_NAME_MAX);
     
     parseMemory(magic, mbTags);
-    // Initialize physical memory allocator    
+    PMM_Initialize(MMU_LargestRegion());
+        
     // Initialize virtual memory (paging)
-}
-
-void MMU_PrintDebug()
-{
-    kprintf("Command line arguments: [%s]\nBootloader name: [%s]\n", g_MMAP.cmdArgs, g_MMAP.bootloaderName);
-    for (uint8_t i = 0; i < g_MMAP.regions; i++)
-    {
-        kprintf("Start: 0x%x, Length: 0x%x (", g_MMAP.physicalRegions[i].start, g_MMAP.physicalRegions[i].len);
-        printFormattedBytes(g_MMAP.physicalRegions[i].len);
-        kprintf("), Type: ");
-        printFormattedMemoryType(g_MMAP.physicalRegions[i].memoryEntryType);
-        putc('\n');
-    }
-    
-    kprintf("Modules:\n");
-    for (uint8_t i = 0; i < g_MMAP.modulesCount; i++)
-        kprintf("Module at: 0x%x - 0x%x. Command line args: [%s]\n", g_MMAP.modules[i].start, g_MMAP.modules[i].start + g_MMAP.modules[i].len, g_MMAP.modules[i].cmdArgs);
 }
 
 void parseMemory(const uintptr_t magic, const MB2Info_t *mbTags)
@@ -145,13 +130,13 @@ void parseMemory(const uintptr_t magic, const MB2Info_t *mbTags)
 
 void parseACPIV1(struct multiboot_tag_old_acpi *tag)
 {
-    if (ACPI_ParseV1((struct multiboot_tag_old_acpi *)tag))
+    if (ACPI_ParseV1(tag))
         ACPI_Enable();
 }
 
 void parseACPIV2(struct multiboot_tag_new_acpi *tag)
 {
-    if (ACPI_ParseV2((struct multiboot_tag_new_acpi *)tag))
+    if (ACPI_ParseV2(tag))
         ACPI_Enable();
 }
 
@@ -162,20 +147,23 @@ void parseMMAP(const struct multiboot_tag_mmap *tag)
     
     while ((uint8_t*)entry < (uint8_t *)tag + tag->size)
     {
+        if (i >= MMU_MAX_REGIONS)
+        {
+            LOGW("MMU", "Physical regions exceeded max (%d)\n", MMU_MAX_REGIONS);
+            return;
+        }
+        
         g_MMAP.physicalRegions[i].start = entry->addr;
         g_MMAP.physicalRegions[i].len = entry->len;
         g_MMAP.physicalRegions[i++].memoryEntryType = entry->type;
         
-        if (entry->type == MMAP_Free)
-        {
-            if (i > MMU_MAX_REGIONS)
-            {
-                LOGW("MMU", "Physical regions exceeded max (%d)\n", MMU_MAX_REGIONS);
-                return;
-            }
-        }
+        LOGI("MMU", "Start: 0x%x, Length: %lu B (", entry->addr, entry->len);
+        printFormattedBytes(entry->len);
+        LOGINM("), Type: ");
+        printFormattedMemoryType(entry->type);
+        LOGINM("\n");
         
-        entry = (multiboot_memory_map_t*)((uintptr_t)entry + tag->entry_size);
+        entry = (multiboot_memory_map_t *)((uintptr_t)entry + tag->entry_size);
     }
     
     g_MMAP.regions = i;
@@ -199,7 +187,7 @@ MemoryRegion_t *MMU_LargestRegion()
     for (size_t i = 0; i < g_MMAP.regions; i++)
     {
         tmp = g_MMAP.physicalRegions[i].len;
-        if (tmp > largestSize)
+        if (g_MMAP.physicalRegions[i].memoryEntryType == MMAP_Free && tmp > largestSize)
         {
             largestSize = tmp;
             largestRegion = &g_MMAP.physicalRegions[i];

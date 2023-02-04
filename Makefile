@@ -19,7 +19,7 @@ export KERNEL_BIN := $(OUTPUT_DIR)/$(KERNEL_BIN_NAME)
 export OS_ISO := $(OUTPUT_DIR)/os.iso
 
 QEMU := qemu-system-x86_64
-QFLAGS := -m 2G -rtc base=localtime
+QFLAGS := -m 256 -rtc base=localtime
 
 .PHONY: run debug build setup build_config_file clean deep_clean
 

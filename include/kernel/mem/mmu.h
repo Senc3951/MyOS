@@ -56,11 +56,6 @@ typedef struct MB2_INFO
 void MMU_Initialize(const uintptr_t magic, const MB2Info_t *mbTags);
 
 /**
- * @brief Print all known information about the memory.
-*/
-void MMU_PrintDebug();
-
-/**
  * @brief Get the largest region available.
  * 
  * @return Largest region avaiable.
