@@ -19,7 +19,7 @@ export KERNEL_BIN := $(OUTPUT_DIR)/$(KERNEL_BIN_NAME)
 export OS_ISO := $(OUTPUT_DIR)/os.iso
 
 QEMU := qemu-system-x86_64
-QFLAGS := -m 256 -rtc base=localtime
+QFLAGS := -m 2G -rtc base=localtime
 
 .PHONY: run debug build setup build_config_file clean deep_clean
 
@@ -62,7 +62,6 @@ build_config_file:
 	@echo "set timeout=0" > $(GRUB_CONFIG_FILE)
 	@echo "set default=0" >> $(GRUB_CONFIG_FILE)
 	@echo "menuentry '$(OS_NAME)' {" >> $(GRUB_CONFIG_FILE)
-	@echo "	set gfxpayload=keep" >> $(GRUB_CONFIG_FILE)
 	@echo "	multiboot2 /boot/$(KERNEL_BIN_NAME)" >> $(GRUB_CONFIG_FILE)
 	@echo "	boot" >> $(GRUB_CONFIG_FILE)
 	@echo "}" >> $(GRUB_CONFIG_FILE)

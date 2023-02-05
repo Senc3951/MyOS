@@ -19,13 +19,13 @@ static void parseFrameBuffer(struct multiboot_tag_framebuffer *tag);
 static inline void printFormattedBytes(const size_t bytes)
 {
     if (bytes > 1073741824)
-        LOGINM("%ld GB", bytes / 1073741824);
+        LOGI(NULL, "%ld GB", bytes / 1073741824);
     else if (bytes > 1048576)
-        LOGINM("%ld MB", bytes / 1048576);
+        LOGI(NULL, "%ld MB", bytes / 1048576);
     else if (bytes > 1024)
-        LOGINM("%ld KB", bytes / 1024);
+        LOGI(NULL, "%ld KB", bytes / 1024);
     else
-        LOGINM("%ld B", bytes);
+        LOGI(NULL, "%ld B", bytes);
 }
 
 static inline void printFormattedMemoryType(const MemoryEntryType_t type)
@@ -33,22 +33,22 @@ static inline void printFormattedMemoryType(const MemoryEntryType_t type)
     switch (type)
     {
         case MMAP_Free:
-            LOGINM("Free");
+            LOGI(NULL, "Free");
             break;
         case MMAP_Reserved:
-            LOGINM("Reserved");
+            LOGI(NULL, "Reserved");
             break;
         case MMAP_ACPI_Reclaimable:
-            LOGINM("ACPI Reclaimable");
+            LOGI(NULL, "ACPI Reclaimable");
             break;
         case MMAP_NVS:
-            LOGINM("NVS");
+            LOGI(NULL, "NVS");
             break;
         case MMAP_BADRAM:
-            LOGINM("BADRAM");
+            LOGI(NULL, "BADRAM");
             break;
         default:
-            LOGINM("Unknown");
+            LOGI(NULL, "Unknown");
             break;
     }
 }
@@ -159,9 +159,9 @@ void parseMMAP(const struct multiboot_tag_mmap *tag)
         
         LOGI("MMU", "Start: 0x%x, Length: %lu B (", entry->addr, entry->len);
         printFormattedBytes(entry->len);
-        LOGINM("), Type: ");
+        LOGI(NULL, "), Type: ");
         printFormattedMemoryType(entry->type);
-        LOGINM("\n");
+        LOGI(NULL, "\n");
         
         entry = (multiboot_memory_map_t *)((uintptr_t)entry + tag->entry_size);
     }
@@ -176,6 +176,7 @@ void parseFrameBuffer(struct multiboot_tag_framebuffer *tag)
     uint32_t height = tag->common.framebuffer_height;
     uint32_t pitch = tag->common.framebuffer_pitch;
     
+    LOGE("MMU", "Addr: 0x%x, Width: %lu, Height: %lu, Pitch: %lu\n", addr, width, height, pitch);
     LOGE("MMU", "TODO: Implement frame buffer.\n");
 }
 

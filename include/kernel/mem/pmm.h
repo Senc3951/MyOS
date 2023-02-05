@@ -10,10 +10,6 @@ typedef struct PMM_INFO
     uint64_t start;
     uint64_t blocks;
     uint32_t *buffer;
-    
-    uint64_t total;
-    uint64_t free;
-    uint64_t used;
 } PMMInfo_t;
 
 /**
@@ -55,9 +51,17 @@ void *PMM_AllocateBlock();
  * @brief Allocate memory blocks.
  * 
  * @param blocks Amount of blocks to allocate.
- * @return allocated blocks if found available ones, NULL otherwise.
+ * @return Allocated blocks if found available ones, NULL otherwise.
 */
 void *PMM_Allocate(const size_t blocks);
+
+/**
+ * @brief Allocate and clear memory blocks.
+ * 
+ * @param blocks Amount of blocks to allocate.
+ * @return Allocated blocks if found available ones, NULL otherwise.
+*/
+void *PMM_Calloc(const size_t blocks);
 
 /**
  * @brief Free a memory block.

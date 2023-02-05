@@ -10,7 +10,7 @@ void kmain(uintptr_t magic, MB2Info_t *mbTags)
     
     HAL_Initialize();
     MMU_Initialize(magic, mbTags);
-    
+
     while (1)
         __HALT();
 }
