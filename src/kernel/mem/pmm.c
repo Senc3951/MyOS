@@ -46,7 +46,7 @@ void PMM_Initialize(MemoryRegion_t *region)
     LOGI("PMM", "Blocks: 0x%x, State buffer start: 0x%x\n", blocks, g_Buffer);
     
     // Mark all memory as unused (state buffer and memory buffer)
-    memset((void *)g_Buffer, 0, 2 * g_PMM.blocks);
+    memset((void *)g_Buffer, 0, g_PMM.blocks);
     LOGI("PMM", "Physical memory manager Initialized.\n");
 }
 
