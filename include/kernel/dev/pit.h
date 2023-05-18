@@ -59,3 +59,10 @@ void pit_init(const uint16_t frequency);
  * @param milliseconds Milliseconds to sleep.
 */
 void pit_sleep(const size_t milliseconds);
+
+/**
+ * @brief Check if currently sleeping.
+ * 
+ * @return True if currently sleeping, False, otherwise.
+*/
+bool pit_is_sleeping();

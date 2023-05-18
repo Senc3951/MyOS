@@ -76,3 +76,23 @@ void vga_puts(const uint8_t *str)
     while (str[i] != '\0')
         vga_putc(str[i++]);
 }
+
+void vga_delc()
+{
+    if (g_Col == 0)
+    {
+        if (g_Row == 0)
+            return;
+        
+        g_Row--;
+        g_Col = WIDTH;
+    }
+    
+    g_VideoBuffer[GET_INDEX(g_Row, --g_Col)] = GET_VGA_CHAR(' ');
+}
+
+void vga_delt()
+{
+    for (uint8_t i = 0; i < TAB_LENGTH - (g_Col % TAB_LENGTH); i++)
+        vga_delc();
+}

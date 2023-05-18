@@ -64,3 +64,13 @@ void vga_putc(const uint8_t c);
  * @param str String to print.
 */
 void vga_puts(const uint8_t *str);
+
+/**
+ * @brief Delete a character
+*/
+void vga_delc();
+
+/**
+ * @brief Delete a tab.
+*/
+void vga_delt();

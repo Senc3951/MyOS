@@ -6,11 +6,16 @@
 #include <arch/pic.h>
 #include <arch/irq.h>
 #include <sys/logger.h>
+#include <dev/keyboard/keyboard.h>
 
 static void devices_init()
 {
     pit_init(PIT_DEFAULT_FREQUENCY);
     LOG("PIT initialized\n");
+    if (keyboard_init())
+        LOG("Keyboard initialized\n");
+    else
+        return;
 }
 
 void hal_init()

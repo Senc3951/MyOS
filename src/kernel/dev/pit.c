@@ -3,8 +3,9 @@
 #include <arch/irq.h>
 
 volatile size_t g_CountDown;
+bool g_isSleeping = false;
 
-static void interruptHandler(struct interrupt_stack *stack)
+static void interrupt_handler(struct interrupt_stack *stack)
 {
     g_CountDown--;
 }
@@ -25,12 +26,21 @@ void pit_init(const uint16_t frequency)
     outb(PIT_CHANNEL_0, (freq & 0xFF00) >> 8);     // High byte
     IO_WAIT();
     
-    irq_register_interrupt(IRQ_PIT, interruptHandler, true);
+    irq_register_interrupt(IRQ_PIT, interrupt_handler, true);
 }
 
 void pit_sleep(const size_t milliseconds)
 {
+    g_isSleeping = true;
     g_CountDown = milliseconds;
+
     while (g_CountDown > 0)
         HALT();
+    
+    g_isSleeping = false;
+}
+
+bool pit_is_sleeping()
+{
+    return g_isSleeping;
 }
