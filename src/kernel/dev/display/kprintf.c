@@ -3,10 +3,13 @@
 #include "dev/display/serial.h"
 #include <dev/display/kprintf.h>
 
+bool g_OnlySerial = false;
+
 static void putc(uint8_t c)
 {
     serial_write(c);
-    vga_putc(c);
+    if (!g_OnlySerial)
+        vga_putc(c);
 }
 
 static void puts(const uint8_t *s)
@@ -182,6 +185,16 @@ int vkprintf(const char *fmt, va_list valist)
 
 int kprintf(const char* fmt, ...)
 {
+    g_OnlySerial = false;
+    va_list args;
+    va_start(args, fmt);
+    
+    return vkprintf(fmt, args);
+}
+
+int ksprintf(bool onlySerial, const char *fmt, ...)
+{
+    g_OnlySerial = onlySerial;
     va_list args;
     va_start(args, fmt);
     

@@ -14,7 +14,7 @@ A Custom 64 bit OS.
 * ld
 
 ```bash
-# To install on Ubuntu
+# Install on Ubuntu
 sudo apt install git qemu-system xorriso mtools make nasm gcc binutils
 ```
 
@@ -23,8 +23,12 @@ sudo apt install git qemu-system xorriso mtools make nasm gcc binutils
 git clone https://github.com/Senc3951/MyOS.git
 cd MyOS
 
-make build  # To compile the OS
-make run    # To run the OS
+make build
+```
+
+## Run Instructions
+``` bash
+make run
 ```
 
 ## Debug Instructions
