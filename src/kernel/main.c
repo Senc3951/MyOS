@@ -10,7 +10,7 @@ void kmain(uintptr_t magic, void *mbTags)
     serial_init();
     vga_clrsn();
     hal_init();
-
+    
     while (1)   // Temporary
         CLI();
 }

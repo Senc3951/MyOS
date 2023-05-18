@@ -31,10 +31,9 @@ int vkprintf(const char *fmt, va_list args);
 int kprintf(const char* fmt, ...);
 
 /**
- * @brief Print a formatted string.
+ * @brief Print a formatted string to the serial port.
  * 
- * @param onlySerial Choose if to print only with serial input
  * @param fmt Format to print.
  * @return 1 if executed successfully, -1 otherwise.
 */
-int ksprintf(bool onlySerial, const char *fmt, ...);
+int ksprintf(const char *fmt, ...);

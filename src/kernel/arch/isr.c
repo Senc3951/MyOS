@@ -1,6 +1,8 @@
 #include <stddef.h>
 #include <arch/isr.h>
 #include <arch/idt.h>
+#include <arch/irq.h>
+#include <sys/panic.h>
 #include <sys/logger.h>
 
 ISRHandler g_ISRInterruptHandlers[IDT_GATES];
@@ -42,7 +44,7 @@ static const char *g_EXCEPTIONS[] = {
 
 void isr_register_interrupt(const uint8_t interruptNumber, ISRHandler handler)
 {
-    if (interruptNumber < 0x20)
+    if (interruptNumber < IRQ0)
         LOG("Registering a Handler for Interrupt No. 0x%x [%s]\n", interruptNumber, g_EXCEPTIONS[interruptNumber]);
     else
         LOG("Registering a Handler for Interrupt No. 0x%x\n", interruptNumber);
@@ -56,7 +58,17 @@ void isr_interrupt_handler(struct interrupt_stack *stack)
     if (g_ISRInterruptHandlers[intNumber] != NULL)
         g_ISRInterruptHandlers[intNumber](stack);
     else
-        isr_dump_registers(stack);
+    {
+        if (!IS_IRQ(intNumber))
+        {
+            if (intNumber < IRQ0)
+                IKPANIC(stack, "%s - interrupt number: 0x%x, Error Code: 0x%x.\n\n", g_EXCEPTIONS[intNumber], intNumber, stack->errorCode);
+            else
+                IKPANIC(stack, "Interrupt number: 0x%x, Error Code: 0x%x.\n\n", g_EXCEPTIONS[intNumber], intNumber, stack->errorCode);
+        }
+        
+        irq_interrupt_handler(stack);
+    }
 }
 
 void isr_dump_registers(struct interrupt_stack *stack)

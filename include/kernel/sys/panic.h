@@ -1,0 +1,37 @@
+#pragma once
+
+#include <io/io.h>
+#include <arch/isr.h>
+#include <dev/display/vga.h>
+#include <dev/display/kprintf.h>
+
+/**
+ * @brief Print a panic message and dump the stack.
+ * @attention This will halt the system infinitely.
+ * 
+ * @param stack Stack before the panic.
+*/
+#define IKPANIC(stack, ...) ({\
+    vga_clrcsn(BLUE); \
+    \
+    ksprintf("\n===== [PANIC] =====\n"); \
+    kprintf("[%s:%s:%d]\n", __FILE__, __FUNCTION__, __LINE__); \
+    kprintf(__VA_ARGS__); \
+    isr_dump_registers(stack); \
+    \
+    CLI_HALT(); \
+})
+
+/**
+ * @brief Print a panic message.
+ * @attention This will halt the system infinitely.
+*/
+#define KPANIC(...) {\
+    vga_clrcsn(BLUE); \
+    \
+    ksprintf("\n===== [PANIC] =====\n"); \
+    kprintf("[%s:%s:%d]\n", __FILE__, __FUNCTION__, __LINE__); \
+    kprintf(__VA_ARGS__); \
+    \
+    CLI_HALT(); \
+}

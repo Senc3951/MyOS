@@ -192,9 +192,9 @@ int kprintf(const char* fmt, ...)
     return vkprintf(fmt, args);
 }
 
-int ksprintf(bool onlySerial, const char *fmt, ...)
+int ksprintf(const char *fmt, ...)
 {
-    g_OnlySerial = onlySerial;
+    g_OnlySerial = true;
     va_list args;
     va_start(args, fmt);
     

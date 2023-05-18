@@ -1,5 +1,6 @@
 #include <arch/idt.h>
 #include <arch/gdt.h>
+#include <arch/irq.h>
 #include <lib/string.h>
 
 extern uint64_t interrupt_handlers[];
@@ -18,7 +19,7 @@ void idt_init()
     };
     memset(idt.base, 0, idt.limit);
     
-    for (size_t i = 0; i <= 0x2F; i++)
+    for (size_t i = 0; i <= IRQ15; i++)
         idt_set_entry(i, interrupt_handlers[i], KERNEL_CS, IDT_INTERRUPT_GATE);
     
     IDT_LOAD(&idt);
