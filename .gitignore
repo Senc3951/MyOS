@@ -42,3 +42,6 @@
 
 # Log files
 *.log
+.vscode/
+obj/
+output/
