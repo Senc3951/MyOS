@@ -14,6 +14,6 @@ void hal_init()
     LOG("IDT initialized\n");
     pic_init(IRQ0, IRQ0 + 8, false);
     LOG("PIC initialized\n");
-
+    
     STI();
 }

@@ -18,6 +18,7 @@
     kprintf("[%s:%s:%d]\n", __FILE__, __FUNCTION__, __LINE__); \
     kprintf(__VA_ARGS__); \
     isr_dump_registers(stack); \
+    isr_dump_stack_trace(stack, ISR_STACK_TRACE_MAX); \
     \
     CLI_HALT(); \
 })
