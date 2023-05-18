@@ -32,6 +32,16 @@ void memcpy(void *dest, const void *src, const size_t n);
 void *memset(void *dest, const uint8_t c, size_t n);
 
 /**
+ * @brief Copy a string to another string.
+ * 
+ * @param dst Destination buffer.
+ * @param src String to copy.
+ * @param n Amount of bytes to copy.
+ * @return Copied string.
+*/
+char *strncpy(char *dest, const char *src, size_t n);
+
+/**
  * @brief Calculate the length of a string.
  * 
  * @param s String to calculate it's length.

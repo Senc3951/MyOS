@@ -4,12 +4,12 @@
 
 #define CURRENT_YEAR 2023
 
-#define get_update_in_progress_flag() ({ \
+#define GET_UPDATE_IN_PROGRESS_FLAG() ({ \
     outb(CMOS_ADDRESS_PORT, 0x0A); \
     (inb(CMOS_DATA_PORT) & 0x80); \
 })
 
-#define get_RTC_register(reg) ({ \
+#define GET_RTC_REGISTER(reg) ({ \
     outb(CMOS_ADDRESS_PORT, reg); \
     inb(CMOS_DATA_PORT); \
 })
@@ -19,15 +19,15 @@ int g_centuryRegister = 0x00;
 
 void cmos_time(time_t *t)
 {
-    while (get_update_in_progress_flag()) ;                // Make sure an update isn't in progress
-    t->second = get_RTC_register(0x00);
-    t->minute = get_RTC_register(0x02);
-    t->hour = get_RTC_register(0x04);
-    t->day = get_RTC_register(0x07);
-    t->month = get_RTC_register(0x08);
-    t->year = get_RTC_register(0x09);
+    while (GET_UPDATE_IN_PROGRESS_FLAG()) ;                // Make sure an update isn't in progress
+    t->second = GET_RTC_REGISTER(0x00);
+    t->minute = GET_RTC_REGISTER(0x02);
+    t->hour = GET_RTC_REGISTER(0x04);
+    t->day = GET_RTC_REGISTER(0x07);
+    t->month = GET_RTC_REGISTER(0x08);
+    t->year = GET_RTC_REGISTER(0x09);
     if (g_centuryRegister != 0)
-        t->century = get_RTC_register(g_centuryRegister);
+        t->century = GET_RTC_REGISTER(g_centuryRegister);
 
     do
     {
@@ -39,20 +39,20 @@ void cmos_time(time_t *t)
         g_lYear = t->year;
         g_lCentury = t->century;
 
-        while (get_update_in_progress_flag()) ;           // Make sure an update isn't in progress
-        t->second = get_RTC_register(0x00);
-        t->minute = get_RTC_register(0x02);
-        t->hour = get_RTC_register(0x04);
-        t->day = get_RTC_register(0x07);
-        t->month = get_RTC_register(0x08);
-        t->year = get_RTC_register(0x09);
+        while (GET_UPDATE_IN_PROGRESS_FLAG()) ;           // Make sure an update isn't in progress
+        t->second = GET_RTC_REGISTER(0x00);
+        t->minute = GET_RTC_REGISTER(0x02);
+        t->hour = GET_RTC_REGISTER(0x04);
+        t->day = GET_RTC_REGISTER(0x07);
+        t->month = GET_RTC_REGISTER(0x08);
+        t->year = GET_RTC_REGISTER(0x09);
         if (g_centuryRegister != 0)
-            t->century = get_RTC_register(g_centuryRegister);
+            t->century = GET_RTC_REGISTER(g_centuryRegister);
     } while ((g_lSecond != t->second) || (g_lMinute != t->minute) || (g_lHour != t->hour) ||
                (g_lDay != t->day) || (g_lMonth != t->month) || (g_lYear != t->year) ||
                (g_lCentury != t->century));
     
-    g_registerB = get_RTC_register(0x0B);
+    g_registerB = GET_RTC_REGISTER(0x0B);
 
     // Convert BCD to binary values if necessary
     if (!(g_registerB & 0x04))
