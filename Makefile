@@ -2,6 +2,7 @@ OS_NAME := MyOS
 GRUB_DIR := iso/boot
 GRUB_CONFIG_FILE := $(GRUB_DIR)/grub/grub.cfg
 KERNEL_BIN_NAME := kernel.bin
+LOG_FILE := serial.log
 
 export OBJ_DIR := obj
 export OUTPUT_DIR := output
@@ -18,7 +19,8 @@ export KERNEL_BIN := $(OUTPUT_DIR)/$(KERNEL_BIN_NAME)
 export OS_ISO := $(OUTPUT_DIR)/os.iso
 
 QEMU := qemu-system-x86_64
-QFLAGS := -m 2G -rtc base=localtime
+QFLAGS := -m 2G -rtc base=localtime -chardev stdio,id=char0,logfile=$(LOG_FILE),signal=off \
+  -serial chardev:char0
 
 .PHONY: run debug build setup build_config_file clean
 

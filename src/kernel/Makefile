@@ -1,8 +1,8 @@
-SUB_DIRS := boot
+SUB_DIRS := boot dev/display io lib
 
-OBJ_DIR := ../../$(OBJ_DIR)/Kernel
+OBJ_DIR := ../../$(OBJ_DIR)/kernel
 OUTPUT_DIR := ../../$(OUTPUT_DIR)
-INCLUDE_DIR := ../../$(INCLUDE_DIR)
+INCLUDE_DIR := ../../$(INCLUDE_DIR)/kernel
 KERNEL_BIN := ../../$(KERNEL_BIN)
 
 LINKER_FILE := linker.ld
