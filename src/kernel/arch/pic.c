@@ -1,8 +1,6 @@
 #include <io/io.h>
 #include <arch/pic.h>
 
-static bool g_AutoEOI = false;
-
 void pic_init(const uint8_t offsetPIC1, const uint8_t offsetPIC2, const bool autoEOI)
 {
     // Initialize Control Word 1
