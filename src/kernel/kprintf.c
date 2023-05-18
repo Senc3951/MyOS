@@ -1,7 +1,7 @@
+#include <kprintf.h>
 #include <lib/std.h>
-#include "dev/display/vga.h"
-#include "dev/display/serial.h"
-#include <dev/display/kprintf.h>
+#include <dev/display/vga.h>
+#include <dev/display/serial.h>
 
 bool g_OnlySerial = false;
 

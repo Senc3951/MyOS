@@ -1,6 +1,6 @@
 #pragma once
 
-#include <dev/display/kprintf.h>
+#include <kprintf.h>
 
 #define LOG(...) ({ \
     ksprintf("[%s:%s:%d] ", __FILE__, __FUNCTION__, __LINE__); \

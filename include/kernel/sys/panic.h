@@ -1,9 +1,9 @@
 #pragma once
 
 #include <io/io.h>
+#include <kprintf.h>
 #include <arch/isr.h>
 #include <dev/display/vga.h>
-#include <dev/display/kprintf.h>
 
 /**
  * @brief Print a panic message and dump the stack.

@@ -2,6 +2,7 @@
 
 // Taken from https://github.com/hrinn/HaydenOS/blob/0c83ed94da193881c4b278b16e8df4b4d7237ab6/src/kernel/lib/printk.c
 
+#include <stdint.h>
 #include <stdarg.h>
 
 #define FORMAT_BUFF 20
