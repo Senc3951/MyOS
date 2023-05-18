@@ -5,6 +5,7 @@
 #include <arch/idt.h>
 #include <arch/pic.h>
 #include <arch/irq.h>
+#include <arch/nmi.h>
 #include <sys/logger.h>
 #include <dev/keyboard/keyboard.h>
 
@@ -24,6 +25,8 @@ void hal_init()
     LOG("GDT initialized\n");
     idt_init();
     LOG("IDT initialized\n");
+    nmi_enable();
+    LOG("NMI enabled\n");
     pic_init(IRQ0, IRQ0 + 8, false);
     LOG("PIC initialized\n");
     
