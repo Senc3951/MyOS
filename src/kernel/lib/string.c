@@ -1,0 +1,56 @@
+#include <lib/string.h>
+
+int memcmp(const void *d1, const void *d2, const size_t n)
+{
+    const uint8_t *c1 = (uint8_t *)d1;
+    const uint8_t *c2 = (uint8_t *)d2;
+    if (c1 == c2)
+        return 0;
+    
+    for (size_t i = 0; i < n; i++, c1++, c2++)
+    {
+        if (*c1 != *c2)
+            return (*c1 > *c2) ? 1 : -1;
+    }
+    
+    return 0;
+}
+
+void memcpy(void *dest, const void *src, const size_t n)
+{
+    const uint8_t *s = (uint8_t *)src;
+    uint8_t *d = (uint8_t *)dest;
+
+    for (size_t i = 0; i < n; i++)
+        d[i] = s[i];
+}
+
+void *memset(void *dest, const uint8_t c, size_t n)
+{
+    uint8_t *ps = dest;
+    while (n--)
+        *ps++ = c;
+    
+    return dest;
+}
+
+size_t strlen(const char *s)
+{
+    const char *tmp;
+    for (tmp = s; *tmp; ++tmp) ;
+    
+    return tmp - s;
+}
+
+void strrev(char *s)
+{
+    int i = 0, j = strlen(s) - 1;
+    char t;
+    
+    while (i < j)
+    {
+        t = s[i];
+        s[i++] = s[j];
+        s[j--] = t;
+    }
+}
