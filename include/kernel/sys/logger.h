@@ -6,3 +6,7 @@
     ksprintf("[%s:%s:%d] ", __FILE__, __FUNCTION__, __LINE__); \
     ksprintf(__VA_ARGS__); \
 })
+
+#define LOGN(...) ({ \
+    ksprintf(__VA_ARGS__); \
+})
