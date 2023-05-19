@@ -1,14 +1,42 @@
+; Access bits
+PRESENT        equ 1 << 7
+NOT_SYS        equ 1 << 4
+EXEC           equ 1 << 3
+DC             equ 1 << 2
+RW             equ 1 << 1
+ACCESSED       equ 1 << 0
+ 
+; Flags bits
+GRAN_4K       equ 1 << 7
+SZ_32         equ 1 << 6
+LONG_MODE     equ 1 << 5
+
 global _start, gdt64, p4_table
 extern long_mode_start
 
 section .multiboot2.gdt64    align=4
+
 gdt64:
-    dq 0    ; null descriptor
-.kernel_code: equ $ - gdt64
-    dq (1<<43) | (1<<44) | (1<<47) | (1<<53)    ; kernel mode code segment
-.pointer:
-    dw $ - gdt64 - 1
-    dq gdt64
+    .null: equ $ - gdt64
+        dq 0
+    .code: equ $ - gdt64
+        dd 0xFFFF                                   ; Limit & Base (low, bits 0-15)
+        db 0                                        ; Base (mid, bits 16-23)
+        db PRESENT | NOT_SYS | EXEC | RW            ; Access
+        db GRAN_4K | LONG_MODE | 0xF                ; Flags & Limit (high, bits 16-19)
+        db 0                                        ; Base (high, bits 24-31)
+    .data: equ $ - gdt64
+        dd 0xFFFF                                   ; Limit & Base (low, bits 0-15)
+        db 0                                        ; Base (mid, bits 16-23)
+        db PRESENT | NOT_SYS | RW                   ; Access
+        db GRAN_4K | SZ_32 | 0xF                    ; Flags & Limit (high, bits 16-19)
+        db 0                                        ; Base (high, bits 24-31)
+    .tss: equ $ - gdt64
+        dd 0x00000068
+        dd 0x00CF8900
+    .pointer:
+        dw $ - gdt64 - 1
+        dq gdt64
 
 section .multiboot2.bss  nobits  write   align=4
 align 0x1000
@@ -36,14 +64,14 @@ _start:
     call check_multiboot
     call check_cpuid
     call check_long_mode
-
+    
     ; Setup Paging
     call setup_page_tables
     call enable_paging    
 
 	; Load GDT
     lgdt [gdt64.pointer]
-    jmp gdt64.kernel_code:long_mode_start
+    jmp gdt64.code:long_mode_start
     
     hlt
 
@@ -63,36 +91,49 @@ check_multiboot:
     jmp error
 
 check_cpuid:
-    pushfd              ; Copy FLAGS in to eax via stack
-    pop eax             
-    mov ecx, eax        ; Copy to ecx as well for comparing later on
-    xor eax, 1 << 21    ; Flip the ID bit
-    
-	push eax            ; Copy eax to FLAGS via the stack
+    ; Copy FLAGS in to EAX via stack
+    pushfd
+    pop eax
+ 
+    ; Copy to ECX as well for comparing later on
+    mov ecx, eax
+ 
+    ; Flip the ID bit
+    xor eax, 1 << 21
+ 
+    ; Copy EAX to FLAGS via the stack
+    push eax
     popfd
-    pushfd              ; Copy FLAGS back to eax (with the flipped bit if CPUID is supported)
-    pop eax             
-    push ecx            ; Restore FLAGS from old version stored in exc
-    
-	popfd
-    cmp eax, ecx        ; Compare eax and exc. If they are equal then the bit wasn't flipped
-    je .no_cpuid        ; and CPUID isn't supported
+ 
+    ; Copy FLAGS back to EAX (with the flipped bit if CPUID is supported)
+    pushfd
+    pop eax
+ 
+    ; Restore FLAGS from the old version stored in ECX (i.e. flipping the ID bit
+    ; back if it was ever flipped).
+    push ecx
+    popfd
+ 
+    ; Compare EAX and ECX. If they are equal then that means the bit wasn't
+    ; flipped, and CPUID isn't supported.
+    xor eax, ecx
+    jz .no_cpuid
     ret
 .no_cpuid:
     mov al, "1"
     jmp error
 
 check_long_mode:
-    mov eax, 0x80000000     ; implicit argument for cpuid
-    cpuid                   ; get highest supported argument
-    cmp eax, 0x80000001     ; it needs to be at least 0x80000001
-    jb .no_long_mode        ; if it's less, the CPU is too old for long mode
+    mov eax, 0x80000000    ; Set the A-register to 0x80000000.
+    cpuid                  ; CPU identification.
+    cmp eax, 0x80000001    ; Compare the A-register with 0x80000001.
+    jb .no_long_mode         ; It is less, there is no long mode.
 
     ; use extended info to test if long mode is available
-    mov eax, 0x80000001     ; argument for extended processor info
-    cpuid                   ; returns various feature bits in ecx and edx
-    test edx, 1 << 29       ; test if the LM-bit is set in the D-register
-    jz .no_long_mode        ; if it's not set, there is no long mode
+    mov eax, 0x80000001    ; Set the A-register to 0x80000001.
+    cpuid                  ; CPU identification.
+    test edx, 1 << 29      ; Test if the LM-bit, which is bit 29, is set in the D-register.
+    jz .no_long_mode         ; They aren't, there is no long mode.
     ret
 .no_long_mode:
     mov al, "2"

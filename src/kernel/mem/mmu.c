@@ -5,6 +5,7 @@
 #include <sys/logger.h>
 #include <sys/assert.h>
 #include <lib/string.h>
+#include <arch/acpi/acpi.h>
 
 #define ALIGN_SIZE(size) ((size + 7) & ~7)
 
@@ -47,6 +48,18 @@ static inline void print_formatted_memory_type(const enum memory_entry_type type
     }
 }
 
+static inline void parse_acpi_old(struct multiboot_tag_old_acpi *tag)
+{
+    if (acpi_parse_old(tag))
+        acpi_enable();
+}
+
+static inline void parse_acpi_new(struct multiboot_tag_new_acpi *tag)
+{
+    if (acpi_parse_new(tag))
+        acpi_enable();
+}
+
 static void parse_mmap(const struct multiboot_tag_mmap *tag)
 {
     uint8_t i = 0;
@@ -83,6 +96,7 @@ static void parse_memory(const uintptr_t magic, const struct multiboot2_info *mb
         KPANIC("Unaligned MBI: 0x%x\n", mbTags);
     
     uint16_t i = 0;
+    bool foundACPI = false;
     struct multiboot_tag *tag;
     
     for (tag = (struct multiboot_tag *)(mbTags + 1); tag->type != MULTIBOOT_TAG_TYPE_END; tag = (struct multiboot_tag *)((uint8_t *)tag + ALIGN_SIZE(tag->size)))
@@ -95,7 +109,7 @@ static void parse_memory(const uintptr_t magic, const struct multiboot2_info *mb
                 break;
             case MULTIBOOT_TAG_TYPE_BOOT_LOADER_NAME:
                 strncpy(g_MMAP.bootloaderName, ((struct multiboot_tag_string *)tag)->string, MMU_BOOTLOADER_NAME_MAX);
-                LOG("Boot loader name: [%s]\n", g_MMAP.bootloaderName);
+                LOG("Bootloader name: [%s]\n", g_MMAP.bootloaderName);
                 break;
             case MULTIBOOT_TAG_TYPE_MODULE:
                 if (i >= MMU_MAX_MODULES)
@@ -111,6 +125,18 @@ static void parse_memory(const uintptr_t magic, const struct multiboot2_info *mb
                 
                 LOG("Module at: 0x%x - 0x%x. Command line args: [%s]\n", mod->mod_start, mod->mod_end, mod->cmdline);
                 break;
+            case MULTIBOOT_TAG_TYPE_ACPI_OLD:
+                foundACPI = true;
+                LOG("ACPI V1 Detected.\n");
+    
+                parse_acpi_old((struct multiboot_tag_old_acpi *)tag);
+                break;
+            case MULTIBOOT_TAG_TYPE_ACPI_NEW:
+                foundACPI = true;
+                LOG("ACPI V2 Detected.\n");
+                
+                parse_acpi_new((struct multiboot_tag_new_acpi *)tag);
+                break;
             case MULTIBOOT_TAG_TYPE_MMAP:
                 parse_mmap((struct multiboot_tag_mmap *)tag);
                 break;
@@ -120,6 +146,7 @@ static void parse_memory(const uintptr_t magic, const struct multiboot2_info *mb
     }
     
     g_MMAP.modulesCount = i;
+    ASSERT(foundACPI, "ACPI Could not be found.\n");
 }
 
 void mmu_init(const uintptr_t magic, const struct multiboot2_info *mbTags)
