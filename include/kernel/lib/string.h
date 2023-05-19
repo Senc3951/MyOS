@@ -42,6 +42,16 @@ void *memset(void *dest, const uint8_t c, size_t n);
 char *strncpy(char *dest, const char *src, size_t n);
 
 /**
+ * @brief Compare two strings.
+ * 
+ * @param s1 First string to compare.
+ * @param s2 Second string to compare.
+ * @param n Bytes to compare.
+ * @return 0 If the strings are equal, > 0 if s1 is bigger than s2, < 0 else.
+*/
+int strncmp(const char *s1, const char *s2, size_t n);
+
+/**
  * @brief Calculate the length of a string.
  * 
  * @param s String to calculate it's length.

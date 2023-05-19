@@ -53,6 +53,20 @@ size_t strlen(const char *s)
     return tmp - s;
 }
 
+int strncmp(const char *s1, const char *s2, size_t n)
+{
+    while (n && *s1 && (*s1 == *s2))
+    {
+        ++s1; ++s2;
+        --n;
+    }
+
+    if (n == 0)
+        return 0;
+    
+    return (*(unsigned char *)s1 - *(unsigned char *)s2);
+}
+
 void strrev(char *s)
 {
     int i = 0, j = strlen(s) - 1;
