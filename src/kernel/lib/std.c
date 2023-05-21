@@ -1,6 +1,27 @@
 #include <stdbool.h>
 #include <lib/std.h>
+#include <lib/math.h>
 #include <lib/string.h>
+
+static int int_to_str(int x, char str[], int d)
+{
+    int i = 0;
+    while (x)
+    {
+        str[i++] = (x % 10) + '0';
+        x /= 10;
+    }
+ 
+    // If number of digits required is more, then
+    // add 0s at the beginning
+    while (i < d)
+        str[i++] = '0';
+    
+    str[i] = '\0';
+    strrev(str);
+    
+    return i;
+}
 
 void itoa(int64_t num, char *buffer, const int base, const bool caps)
 {
@@ -76,4 +97,24 @@ void uitoa(uint64_t num, char *buffer, const int base, const bool caps)
 
     // Reverse string
     strrev(buffer);
+}
+
+void ftoa(double num, char *buffer, short a)
+{
+    int ipart = (int)num;
+    double fpart = num - (double)ipart;
+    if (fpart == 0.0)
+    {
+        itoa(ipart, buffer, 10, false);
+        return;
+    }
+    
+    int i = int_to_str(ipart, buffer, 0);
+    if (a != 0)
+    {
+        buffer[i] = '.';
+        fpart *= pow(10, a);
+        
+        int_to_str((int)fpart, buffer + i + 1, a);
+    }
 }

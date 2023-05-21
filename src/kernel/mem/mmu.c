@@ -14,11 +14,11 @@ struct memory_map g_MMAP;
 static inline void print_formatted_bytes(const size_t bytes)
 {
     if (bytes > 1073741824)
-        LOGN("%ld GB", bytes / 1073741824);
+        LOGN("%f GB", (double)bytes / 1073741824);
     else if (bytes > 1048576)
-        LOGN("%ld MB", bytes / 1048576);
+        LOGN("%f MB", (double)bytes / 1048576);
     else if (bytes > 1024)
-        LOGN("%ld KB", bytes / 1024);
+        LOGN("%f KB", (double)bytes / 1024);
     else
         LOGN("%ld B", bytes);
 }
