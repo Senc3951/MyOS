@@ -9,7 +9,7 @@ struct pmm_info
 {
     uint64_t start;
     uint64_t blocks;
-    uint32_t *buffer;
+    uint64_t *buffer;
 };
 
 /**

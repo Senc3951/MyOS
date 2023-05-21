@@ -18,20 +18,21 @@ A Custom 64 bit OS.
 sudo apt install git qemu-system xorriso mtools make nasm gcc binutils
 ```
 
-## Build Instructions
+## Build
 ```bash
 git clone https://github.com/Senc3951/MyOS.git
 cd MyOS
 
+make setup
 make build
 ```
 
-## Run Instructions
+## Run
 ``` bash
 make run
 ```
 
-## Debug Instructions
+## Debug
 ```bash
 make debug
 

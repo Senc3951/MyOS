@@ -39,6 +39,13 @@ static void print(const uint8_t *s, size_t len)
     print(buffer, FORMAT_BUFF); \
 })
 
+#define print_double(num) ({ \
+    char buffer[FORMAT_BUFF * 2]; \
+    ftoa(num, buffer, 3); \
+    \
+    print(buffer, FORMAT_BUFF * 2); \
+})
+
 #define print_hex(num, caps) ({ \
     char buffer[FORMAT_BUFF]; \
     uitoa(num, buffer, 16, caps); \
@@ -86,6 +93,7 @@ static bool check_format_specifier(const char *fmt, struct kprintf_format_info *
         case '%':
         case 'd':
         case 'u':
+        case 'f':
         case 'x':
         case 'X':
         case 'c':
@@ -143,6 +151,9 @@ int vkprintf(const char *fmt, va_list valist)
                         case 'q': print_uint(va_arg(valist, uint64_t));                 break;
                         case '\0': print_uint(va_arg(valist, uint32_t));                break;
                     }
+                    break;
+                case 'f': // Float
+                    print_double(va_arg(valist, double));
                     break;
                 case 'x': // Lowercase hex
                     switch (info.length_specifier)
