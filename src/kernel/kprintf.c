@@ -3,13 +3,23 @@
 #include <dev/display/vga.h>
 #include <dev/display/serial.h>
 
-bool g_OnlySerial = false;
+// To avoid if checks every char we wish to print
+void (*g_putcFunc)(uint8_t c) = NULL;
 
 static void putc(uint8_t c)
 {
+    g_putcFunc(c);
+}
+
+static void sputc(uint8_t c)
+{
     serial_write(c);
-    if (!g_OnlySerial)
-        vga_putc(c);
+}
+
+static void aputc(uint8_t c)
+{
+    serial_write(c);
+    vga_putc(c);
 }
 
 static void puts(const uint8_t *s)
@@ -196,7 +206,7 @@ int vkprintf(const char *fmt, va_list valist)
 
 int kprintf(const char* fmt, ...)
 {
-    g_OnlySerial = false;
+    g_putcFunc = aputc;
     va_list args;
     va_start(args, fmt);
     
@@ -205,7 +215,7 @@ int kprintf(const char* fmt, ...)
 
 int ksprintf(const char *fmt, ...)
 {
-    g_OnlySerial = true;
+    g_putcFunc = sputc;
     va_list args;
     va_start(args, fmt);
     
