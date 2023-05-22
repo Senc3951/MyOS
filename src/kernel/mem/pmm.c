@@ -46,7 +46,7 @@ void pmm_init(struct memory_region *region)
     
     // Mark all memory as unused (state buffer and memory buffer)
     memset((void *)g_Buffer, 0, chunks);
-    LOG("Physical memory manager Initialized.\n");
+    LOGI("Physical Memory Manager Initialized");
 }
 
 uint64_t pmm_get_total()

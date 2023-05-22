@@ -1,6 +1,7 @@
 #include <io/io.h>
 #include <sys/hal.h>
 #include <dev/pit.h>
+#include <dev/pci.h>
 #include <arch/gdt.h>
 #include <arch/idt.h>
 #include <arch/pic.h>
@@ -12,25 +13,27 @@
 static void devices_init()
 {
     pit_init(PIT_DEFAULT_FREQUENCY);
-    LOG("PIT initialized\n");
+    LOGI("PIT Initialized");
     if (keyboard_init())
-        LOG("Keyboard initialized\n");
+        LOGI("Keyboard Initialized");
     else
         return;
+    
+    pci_init();
+    LOGI("PCI Enumerated");
 }
 
 void hal_init()
 {
     gdt_init();
-    LOG("GDT initialized\n");
+    LOGI("GDT Initialized");
     idt_init();
-    LOG("IDT initialized\n");
+    LOGI("IDT Initialized");
     nmi_enable();
-    LOG("NMI enabled\n");
+    LOGI("NMI Enabled");
     pic_init(IRQ0, IRQ0 + 8, false);
-    LOG("PIC initialized\n");
-    
+    LOGI("PIC Initialized");
     STI();
-
+    
     devices_init();
 }
