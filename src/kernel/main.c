@@ -19,7 +19,7 @@ void kmain(uintptr_t magic, struct multiboot2_info *mbTags)
     
     mmu_init(magic, mbTags);
     hal_init();
-    
+
     while (1)   // Temporary
         CLI();
 }

@@ -1,6 +1,6 @@
+#include <string.h>
 #include <mem/pmm.h>
 #include <sys/panic.h>
-#include <lib/string.h>
 #include <sys/logger.h>
 
 struct pmm_info g_PMM;    // Holds the actual memory

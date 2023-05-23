@@ -1,7 +1,7 @@
+#include "std.h"
+#include "math.h"
+#include "string.h"
 #include <stdbool.h>
-#include <lib/std.h>
-#include <lib/math.h>
-#include <lib/string.h>
 
 static int int_to_str(int x, char str[], int d)
 {

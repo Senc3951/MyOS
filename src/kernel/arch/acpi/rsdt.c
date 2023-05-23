@@ -1,4 +1,4 @@
-#include <lib/string.h>
+#include <string.h>
 #include <arch/acpi/rsdt.h>
 
 bool rsdt_validate(const struct rsdt_header *header)
