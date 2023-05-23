@@ -1,5 +1,5 @@
 #include <io/io.h>
-#include <lib/string.h>
+#include <string.h>
 #include <dev/display/vga.h>
 
 #define GET_INDEX(r, c) (r * WIDTH + c)

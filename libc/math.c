@@ -1,4 +1,4 @@
-#include <lib/math.h>
+#include "math.h"
 
 uint64_t pow(int base, int exp)
 {

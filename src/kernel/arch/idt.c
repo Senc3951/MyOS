@@ -1,7 +1,7 @@
+#include <string.h>
 #include <arch/idt.h>
 #include <arch/gdt.h>
 #include <arch/irq.h>
-#include <lib/string.h>
 
 extern uint64_t interrupt_handlers[];
 static struct idt_entry g_IDTGates[IDT_GATES];

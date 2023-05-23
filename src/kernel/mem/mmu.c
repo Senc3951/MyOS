@@ -1,10 +1,10 @@
 #include <stddef.h>
+#include <string.h>
 #include <mem/mmu.h>
 #include <mem/pmm.h>
 #include <sys/panic.h>
 #include <sys/logger.h>
 #include <sys/assert.h>
-#include <lib/string.h>
 #include <arch/acpi/acpi.h>
 
 #define ALIGN_SIZE(size) ((size + 7) & ~7)

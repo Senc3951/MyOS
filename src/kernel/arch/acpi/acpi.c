@@ -1,7 +1,7 @@
 #include <io/io.h>
+#include <string.h>
 #include <dev/pit.h>
 #include <sys/panic.h>
-#include <lib/string.h>
 #include <sys/logger.h>
 #include <arch/acpi/acpi.h>
 #include <arch/acpi/rsdp.h>

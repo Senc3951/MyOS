@@ -1,5 +1,5 @@
+#include <std.h>
 #include <kprintf.h>
-#include <lib/std.h>
 #include <dev/display/vga.h>
 #include <dev/display/serial.h>
 
