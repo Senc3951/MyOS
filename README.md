@@ -2,7 +2,21 @@
 
 A Custom 64 bit OS.
 
-## Needed Packages:
+#### TODO List
+- [x] Interrupts
+- [x] PIT
+- [x] PS2 Keyboard
+- [x] Float support
+- [x] Physical memory manager
+- [ ] Virtual memory manager (Paging)
+- [x] Heap
+- [x] ACPI
+- [ ] Framebuffer
+- [ ] Filesystem
+- [ ] User-Space
+
+## Install & Build
+#### Needed Packages
 * git
 * grub
 * qemu-system
@@ -18,13 +32,12 @@ A Custom 64 bit OS.
 sudo apt install git qemu-system xorriso mtools make nasm gcc binutils
 ```
 
-## Build
+### Install
 ```bash
 git clone https://github.com/Senc3951/MyOS.git
 cd MyOS
 
 make setup
-make build
 ```
 
 ## Run
