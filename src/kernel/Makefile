@@ -1,4 +1,4 @@
-SUB_DIRS := arch arch/acpi boot dev dev/display dev/keyboard io mem sys
+SUB_DIRS := acpi arch boot dev dev/kb io mem sys
 
 OBJ_DIR := ../../$(OBJ_DIR)/kernel
 OUTPUT_DIR := ../../$(OUTPUT_DIR)

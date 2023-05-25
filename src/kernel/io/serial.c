@@ -1,5 +1,5 @@
 #include <io/io.h>
-#include <dev/display/serial.h>
+#include <io/serial.h>
 
 #define SERIAL_RECEIVED() (inb(SERIAL_PORT + 5) & 1)
 #define TRANSMIT_EMPTY()  (inb(SERIAL_PORT + 5) & 0x20)

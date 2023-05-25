@@ -1,9 +1,9 @@
 #include <dev/pit.h>
 #include <arch/irq.h>
+#include <dev/kb/kb.h>
 #include <sys/panic.h>
 #include <sys/logger.h>
-#include <dev/keyboard/keyboard.h>
-#include <dev/keyboard/translator.h>
+#include <dev/kb/translator.h>
 
 #define MAX_TRIES 3
 

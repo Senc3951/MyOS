@@ -1,10 +1,10 @@
 #include <io/io.h>
 #include <string.h>
 #include <dev/pit.h>
+#include <acpi/acpi.h>
+#include <acpi/rsdp.h>
 #include <sys/panic.h>
 #include <sys/logger.h>
-#include <arch/acpi/acpi.h>
-#include <arch/acpi/rsdp.h>
 
 struct ACPI *g_ACPI = NULL;
 uint16_t g_SLP_TYPa, g_SLP_TYPb, g_SLP_EN, g_SCI_EN = 0;

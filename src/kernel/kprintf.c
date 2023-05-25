@@ -1,7 +1,7 @@
 #include <std.h>
+#include <io/vga.h>
 #include <kprintf.h>
-#include <dev/display/vga.h>
-#include <dev/display/serial.h>
+#include <io/serial.h>
 
 // To avoid if checks every char we wish to print
 void (*g_putcFunc)(uint8_t c) = NULL;

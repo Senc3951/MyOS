@@ -1,8 +1,8 @@
 #pragma once
 
 #include <io/io.h>
+#include <io/vga.h>
 #include <kprintf.h>
-#include <dev/display/vga.h>
 
 #define ASSERT(condition, ...) ({\
     if ((int)condition) {\

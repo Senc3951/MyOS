@@ -1,5 +1,5 @@
 #include <string.h>
-#include <arch/acpi/rsdt.h>
+#include <acpi/rsdt.h>
 
 bool rsdt_validate(const struct rsdt_header *header)
 {

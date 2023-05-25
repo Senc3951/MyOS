@@ -1,6 +1,6 @@
 #include <io/io.h>
 #include <string.h>
-#include <dev/display/vga.h>
+#include <io/vga.h>
 
 #define GET_INDEX(r, c) (r * WIDTH + c)
 #define GET_VGA_COLOR(back, fore) (fore | back << 4)

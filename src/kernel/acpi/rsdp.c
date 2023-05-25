@@ -1,4 +1,4 @@
-#include <arch/acpi/rsdp.h>
+#include <acpi/rsdp.h>
 
 bool rsdp_validate_old(const struct rsdp_descriptor_old *rsdp)
 {

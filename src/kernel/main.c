@@ -1,9 +1,9 @@
 #include <io/io.h>
+#include <io/vga.h>
 #include <sys/hal.h>
 #include <mem/mmu.h>
+#include <io/serial.h>
 #include <sys/fxsave.h>
-#include <dev/display/vga.h>
-#include <dev/display/serial.h>
 
 extern void enable_sse();
 

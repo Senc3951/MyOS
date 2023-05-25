@@ -1,5 +1,5 @@
-#include <dev/display/vga.h>
-#include <dev/keyboard/translator.h>
+#include <io/vga.h>
+#include <dev/kb/translator.h>
 
 #define BASIC_KEY_START 0x0D
 #define BASIC_KEY_END   0x5E

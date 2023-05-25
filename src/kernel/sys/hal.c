@@ -1,14 +1,14 @@
 #include <io/io.h>
+#include <io/pci.h>
 #include <sys/hal.h>
 #include <dev/pit.h>
-#include <dev/pci.h>
 #include <arch/gdt.h>
 #include <arch/idt.h>
 #include <arch/pic.h>
 #include <arch/irq.h>
 #include <arch/nmi.h>
+#include <dev/kb/kb.h>
 #include <sys/logger.h>
-#include <dev/keyboard/keyboard.h>
 
 static void devices_init()
 {
